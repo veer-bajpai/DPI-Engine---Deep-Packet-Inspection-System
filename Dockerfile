@@ -12,6 +12,5 @@ RUN g++ -std=c++17 -pthread -O2 -I include -o dpi_engine \
 
 RUN pip install --no-cache-dir fastapi uvicorn python-multipart
 
-EXPOSE 8000
-
-CMD ["uvicorn", "web.main:app", "--host", "0.0.0.0", "--port", "8000"]
+EXPOSE 10000
+CMD ["sh", "-c", "uvicorn web.main:app --host 0.0.0.0 --port ${PORT:-10000}"]
