@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DPI Engine — Live Demo</title>
+  <style>
+    body { font-family: monospace; max-width: 700px; margin: 40px auto; padding: 0 20px; }
+    pre { background: #111; color: #0f0; padding: 16px; overflow-x: auto; white-space: pre-wrap; }
+    button { padding: 8px 16px; margin: 8px 8px 8px 0; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>DPI Engine — Deep Packet Inspection, Live</h2>
+  <p>Upload a .pcap file or try the bundled sample capture.</p>
+  <input type="file" id="fileInput" accept=".pcap" />
+  <br>
+  <button onclick="uploadFile()">Analyze My File</button>
+  <button onclick="useSample()">Use Sample Capture</button>
+  <pre id="output">Report will appear here...</pre>
+
+  <script>
+    async function uploadFile() {
+      const f = document.getElementById('fileInput').files[0];
+      if (!f) { alert('Choose a .pcap file first'); return; }
+      const form = new FormData();
+      form.append('file', f);
+      document.getElementById('output').textContent = 'Running...';
+      const res = await fetch('/analyze', { method: 'POST', body: form });
+      const data = await res.json();
+      document.getElementById('output').textContent = data.report || JSON.stringify(data);
+    }
+    async function useSample() {
+      document.getElementById('output').textContent = 'Running...';
+      const res = await fetch('/analyze-sample', { method: 'POST' });
+      const data = await res.json();
+      document.getElementById('output').textContent = data.report;
+    }
+  </script>
+</body>
+</html>
